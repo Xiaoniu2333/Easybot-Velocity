@@ -30,8 +30,8 @@ public class VelocityBridgeBehavior implements BridgeBehavior {
         plugin.getLogger().info("收到命令执行请求: " + command + " (玩家: " + playerName + ")");
         server.getCommandManager().executeAsync(server.getConsoleCommandSource(), command);
         return "命令已通过控制台执行: " + command;
-        }
     }
+}
 
     @Override
     public String papiQuery(String playerName, String query) {
