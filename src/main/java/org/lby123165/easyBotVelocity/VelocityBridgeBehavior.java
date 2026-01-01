@@ -23,9 +23,15 @@ public class VelocityBridgeBehavior implements BridgeBehavior {
     }
     @Override
     public String runCommand(String playerName, String command, boolean enablePapi) {
-        server.getCommandManager().executeAsync(server.getConsoleCommandSource(), command);
-        return "Command executed via Velocity Console";
-    }
+        try {
+            logger.info("收到命令执行请求: " + command);
+            server.getCommandManager().executeAsync(server.getConsoleCommandSource(), command);
+            return "命令已通过控制台执行: " + command;
+        } catch (Exception e) {
+            logger.error("执行命令时出错: " + e.getMessage(), e);
+            return "命令执行失败: " + e.getMessage();
+        }
+    }    
 
     @Override
     public String papiQuery(String playerName, String query) {
