@@ -16,31 +16,21 @@ public class VelocityBridgeBehavior implements BridgeBehavior {
     private final ProxyServer server;
     private final Logger logger;
     private final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacyAmpersand();
-    // 移除了冗余的 plugin 字段
 
     public VelocityBridgeBehavior(ProxyServer server, Logger logger) {
         this.server = server;
         this.logger = logger;
     }
-
-    public Logger getLogger() {
-        return logger;
-    }
-
     @Override
     public String runCommand(String playerName, String command, boolean enablePapi) {
-        this.logger.info("收到命令执行请求: " + command + " (玩家: " + playerName + ")");
-
-        String processedCommand = command;
-        if (enablePapi && playerName != null) {
-            processedCommand = command.replace("%player%", playerName);
-        }
-
-        server.getCommandManager().executeAsync(server.getConsoleCommandSource(), processedCommand);
-
-        return "命令已通过控制台执行: " + processedCommand;
+        try {
+            logger.info("收到命令执行请求: " + command);
+            server.getCommandManager().executeAsync(server.getConsoleCommandSource(), command);
+            return "命令已通过控制台执行: " + command;
+        } catch (Exception e) {
+            logger.error("执行命令时出错: " + e.getMessage(), e);
+            return "命令执行失败: " + e.getMessage();
     }
-}
 
     @Override
     public String papiQuery(String playerName, String query) {
